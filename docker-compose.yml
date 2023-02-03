@@ -1,0 +1,47 @@
+version: '2'
+services:
+  apache:
+    build:
+      context: .
+      dockerfile: build/apache/php-8.0/Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - /Users/a/Developer:/var/www/html
+      - ~/.composer/cache:/var/www/.composer/cache
+      - /Users/a/Docker/php8/config/vhosts:/etc/apache2/sites-enabled
+    #      - ~/.npm:/var/www/.npm
+    environment:
+      PHP_IDE_CONFIG: "serverName=Docker"
+#      VIRTUAL_HOST: "example.localhost"
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      - <project_name>-network
+
+  db:
+    image: cytopia/mysql-8.0:latest
+    ports:
+     - 3300:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=magento
+      - MYSQL_USER=magento
+      - MYSQL_PASSWORD=magento
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./backups:/var/tmp/backups
+    networks:
+      - <project_name>-network
+
+networks:
+  <project_name>-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
