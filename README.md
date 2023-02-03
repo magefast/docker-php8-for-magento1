@@ -5,5 +5,7 @@
 - 'host' => 'db',
 - 'dbname' => 'magento',
 - 'username' => 'magento',
+- 'password' => 'magento',
+
 
 ### For Magento 1
